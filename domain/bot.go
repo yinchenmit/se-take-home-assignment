@@ -13,13 +13,16 @@ type Bot struct {
 	CurrentOrder        *Order
 	CreatedAt           time.Time
 	ProcessingStartTime time.Time
+	StateMachine        *FSM
 }
 
 func NewBot(id uint64) *Bot {
+	fsm := NewBotFSM()
 	return &Bot{
-		ID:        id,
-		Status:    Idle,
-		CreatedAt: time.Now(),
+		ID:                  id,
+		Status:              Idle,
+		CreatedAt:           time.Now(),
+		StateMachine:        fsm,
 	}
 }
 
@@ -29,6 +32,12 @@ func (b *Bot) StartProcessing(order *Order) error {
 	}
 	if order == nil {
 		return errors.New("order cannot be nil")
+	}
+
+	// 使用状态机处理状态转换
+	err := b.StateMachine.HandleEvent("assign", order)
+	if err != nil {
+		return err
 	}
 
 	b.Status = Processing
@@ -48,6 +57,9 @@ func (b *Bot) CompleteProcessing() *Order {
 	if order != nil {
 		order.MarkComplete()
 	}
+
+	// 使用状态机处理状态转换
+	b.StateMachine.HandleEvent("complete")
 
 	b.Status = Idle
 	b.CurrentOrder = nil
@@ -85,6 +97,9 @@ func (b *Bot) StopProcessing() *Order {
 	}
 
 	order := b.CurrentOrder
+
+	// 使用状态机处理状态转换
+	b.StateMachine.HandleEvent("error")
 
 	b.Status = Idle
 	b.CurrentOrder = nil

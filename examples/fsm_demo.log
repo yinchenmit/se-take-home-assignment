@@ -1,0 +1,7 @@
+[Demo Order FSM] 2026/03/29 09:12:58.554983 [INFO] State machine initialized with state: pending
+[Demo Order FSM] 2026/03/29 09:12:58.555517 [DEBUG] Received event: assign, current state: pending
+[Demo Order FSM] 2026/03/29 09:12:58.555517 [INFO] State transition: pending -> processing (event: assign, args: [])
+[Demo Order FSM] 2026/03/29 09:12:58.555517 [DEBUG] State updated to: processing
+[Demo Order FSM] 2026/03/29 09:12:58.555517 [DEBUG] Received event: complete, current state: processing
+[Demo Order FSM] 2026/03/29 09:12:58.555517 [INFO] State transition: processing -> complete (event: complete, args: [])
+[Demo Order FSM] 2026/03/29 09:12:58.555517 [DEBUG] State updated to: complete
